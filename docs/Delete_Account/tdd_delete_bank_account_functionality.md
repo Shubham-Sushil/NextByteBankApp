@@ -119,6 +119,21 @@ public class AccountRepository {
             return true;
         }
     }
+
+    /**
+     * Seeds the repository with a demo account so delete functionality can be verified
+     * without first creating an account via the UI. Idempotent — only adds if missing.
+     */
+    public static void seedDemoAccount(BankAccount demoAccount) {
+        if (demoAccount == null) return;
+        synchronized (accounts) {
+            boolean exists = accounts.stream()
+                    .anyMatch(a -> a.getAccountNumber() == demoAccount.getAccountNumber());
+            if (!exists) {
+                accounts.add(demoAccount);
+            }
+        }
+    }
 }
 ```
 
